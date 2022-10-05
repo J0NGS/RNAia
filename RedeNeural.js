@@ -31,7 +31,7 @@ class RedeNeural {
         let input = Matrix.arrayToMatrix(arr);
         let hidden = Matrix.multiply(this.weigths_ih, input);
         hidden = Matrix.add(hidden, this.bias_ih);
-
+        input.print()
         hidden.map(sigmoid)
 
         // HIDDEN -> OUTPUT
@@ -44,11 +44,14 @@ class RedeNeural {
 
         // OUTPUT -> HIDDEN
         let expected = Matrix.arrayToMatrix(target);
+        console.log(target);
         let output_error = Matrix.subtract(expected,output);
         let d_output = Matrix.map(output,dsigmoid);
         let hidden_T = Matrix.transpose(hidden);
-
+        d_output.print();
+        output_error.print();
         let gradient = Matrix.hadamard(d_output,output_error);
+
         gradient = Matrix.escalar_multiply(gradient,this.learning_rate);
         
         // Adjust Bias O->H
