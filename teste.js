@@ -1,56 +1,121 @@
-import{RNA} from './RNA.mjs';
-import { Matriz } from './Matriz.mjs';
-var rna = new RNA(2,3,1);
-var dataset;
+import { RedeNeural } from "./RedeNeural.mjs";
+let train = true;
+let nn = new RedeNeural(21, 10, 21);
 
-//XOR PROBLEM
-dataset = {
-    inputs:
-    [[1, 1],
-    [1, 0],
-    [0, 1],
-    [0, 0]],
-    outputs:
-    [[0],
-    [1],
-    [1],
-    [0]]
+let dataset = {
+    numbers : [
+        [ 0, 1, 1, 0,
+            1, 0, 0, 1,
+            1, 0, 0, 1,       // 0
+            1, 0, 0, 1,
+            0, 1, 1, 0
+        ],
+        [ 0, 1, 0, 0,
+            1, 1, 0, 0,
+            0, 1, 0, 0,       // 1
+            0, 1, 0, 0,
+            1, 1, 1, 0
+        ],
+        [ 0, 1, 1, 0,
+            1, 0, 0, 1,
+            0, 0, 1, 0,       // 2
+            0, 1, 0, 0,
+            1, 1, 1, 1
+        ],
+        [ 1, 1, 1, 0,
+            0, 0, 0, 1,
+            0, 0, 1, 0,       // 3
+            0, 0, 0, 1,
+            1, 1, 1, 0
+        ],
+        [ 1, 0, 1, 0,
+            1, 0, 1, 0,
+            1, 1, 1, 1,       // 4
+            0, 0, 1, 0,
+            0, 0, 1, 0
+        ],
+        [ 1, 1, 1, 1,
+            1, 0, 0, 0,
+            1, 1, 1, 0,       // 5
+            0, 0, 0, 1,
+            1, 1, 1, 0
+        ],
+        [ 0, 1, 1, 1,
+            1, 0, 0, 0,
+            1, 1, 1, 0,       // 6
+            1, 0, 0, 1,
+            0, 1, 1, 0
+        ],
+        [ 1, 1, 1, 1,
+            0, 0, 0, 1,
+            0, 0, 1, 0,       // 7
+            0, 1, 0, 0,
+            0, 1, 0, 0
+        ],
+        [ 0, 1, 1, 0,
+            1, 0, 0, 1,
+            0, 1, 1, 0,       // 8
+            1, 0, 0, 1,
+            0, 1, 1, 0
+        ],
+        [ 0, 1, 1, 0,
+            1, 0, 0, 1,
+            0, 1, 1, 1,       // 9
+            0, 0, 0, 1,
+            1, 1, 1, 1
+        ],
+    ],
+    names   : ["Goulart", "Goncalo", "Francisco", "Jose", "Maria"],
+    outputs : [
+        [ 0, 1, 1, 1,
+            1, 0, 0, 0,
+            1, 1, 1, 0,       // 6
+            1, 0, 0, 1,
+            0, 1, 1, 0
+        ],
+        [ 0, 1, 1, 1,
+            1, 0, 0, 0,
+            1, 1, 1, 0,       // 6
+            1, 0, 0, 1,
+            0, 1, 1, 0
+        ],
+        [ 0, 1, 1, 0,
+            1, 0, 0, 1,
+            0, 1, 1, 0,       // 8
+            1, 0, 0, 1,
+            0, 1, 1, 0
+        ],
+        [ 0, 1, 1, 1,
+            1, 0, 0, 0,
+            1, 1, 1, 0,       // 6
+            1, 0, 0, 1,
+            0, 1, 1, 0,
+        ],
+        [ 1, 1, 1, 1,
+            0, 0, 0, 1,
+            0, 0, 1, 0,       // 7
+            0, 1, 0, 0,
+            0, 1, 0, 0
+        ]]
 }
 
-var train = true;
-if (train) {
-    for (var i = 0; i < 10000; i++) {
-        var index = Math.floor(Math.random(4));
-        rna.train(dataset.inputs[index], dataset.outputs[index]);
+function training() {
+    console.log("Iniciando treinamento!")
+    if (train) {
+        for (let i = 0; i < 10; i++) {
+            nn.train(dataset.numbers[i], dataset.outputs[i]);
+        }
+        if (nn.predict("Goulart")[0] < 0.04 && nn.predict("Maria")[0] > 0.98) {
+            train = false;
+            console.log("Treinamento Finalizado!");
+        }
     }
-    if (rna.predict([0, 0])[0] < 0.04 && rna.predict([1, 0])[0] > 0.98) {
-        console.log("entrou no segundo if")
-        train = false;
-    }
-
 }
-/*let B = new Matriz(2,1);
 
-A.randomize();
-console.log("MATRIZ A");
-A.print();
+function testing() {
+    console.log("ESPERADO: 5; OBTIDO ->", nn.predict("Joao"));
+}
 
-B.randomize();
-console.log("MATRIZ B");
-B.print();
+training();
 
-let C = Matriz.hadamaard(A,B);
-console.log("HADAMAARD A X B");
-C.print();
 
-C = Matriz.multi_escalar(A,10);
-console.log("MULTI ESCALAR A X 10");
-C.print();
-
-C = Matriz.transposer(A);
-console.log("TRANSPOSTA A");
-C.print();
-
-C = Matriz.sub(A,B);
-console.log("SUBTRAÇÃO A - B");
-C.print();*/
